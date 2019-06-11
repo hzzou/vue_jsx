@@ -9,9 +9,12 @@ const smp = new SpeedMeasurePlugin();
 
 module.exports = smp.wrap({
   mode:'development',
-  devtool:'cheap-module-eval-source-map',
+  devtool:'cheap-module-eval-source-map',//开发模式推荐
   resolve:{
-    extensions:['.vue','.js','.jsx','.json']
+    extensions:['.vue','.js','.jsx','.json'],
+    alias:{
+      '@':path.resolve('src')
+    }
   },
   entry:[
     paths.appMain
@@ -33,7 +36,9 @@ module.exports = smp.wrap({
       {
         test:/\.js$/,
         loader:'babel-loader',
-        options:{  //文件按需加载解析
+        options:{  
+          presets: ['@babel/preset-env'],    
+          //文件按需加载解析
           plugins: ['@babel/plugin-transform-runtime', 'babel-plugin-transform-vue-jsx',
             '@babel/plugin-syntax-dynamic-import']//router动态引入插件
         },
@@ -77,6 +82,9 @@ module.exports = smp.wrap({
     open:true,
     inline:true,
     watchContentBase:true,
-    clientLogLevel:'none'
+    clientLogLevel:'none',
+    stats:{
+      children: false //解决Entrypoint undefined
+    }
   }
 })
